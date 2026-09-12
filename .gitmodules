@@ -1,0 +1,3 @@
+[submodule "project/libs/hashlink"]
+	path = project/libs/hashlink
+	url = https://github.com/HaxeFoundation/hashlink.git
