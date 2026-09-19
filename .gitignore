@@ -1,7 +1,4 @@
-project/libs/hl.lib
-project/libs/hl.lib.hash
-project/glad.hdll
-project/glad.hdll.hash
+project/binaries
 project/obj
 build
 .vscode

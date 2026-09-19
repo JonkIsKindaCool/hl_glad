@@ -1,17 +1,22 @@
 {
     "name": "hl_glad",
-    "url": "https://github.com/JonkIsKindaCool/hl_glad/",
+    "url": "https://github.com/JonkIsKindaCool/hl_glad",
     "license": "MIT",
     "tags": [
-        "cross",
-        "useless"
+        "hashlink",
+        "opengl",
+        "glad",
+        "bindings",
+        "cross"
     ],
-    "description": "Glad bindings for hashlink.",
+    "description": "OpenGL function loader (GLAD) bindings for HashLink.",
     "version": "1.0.0",
     "classPath": "src/",
-    "releasenote": "Initial release, everything is working correctly.",
+    "releasenote": "Initial release: OpenGL bindings for HashLink, buildable as a dynamic .hdll or a static library.",
     "contributors": [
         "JonkIsKindaCool"
     ],
-    "dependencies": {}
+    "dependencies": {
+        "hxcpp": ""
+    }
 }
