@@ -2,7 +2,19 @@
 #include <hl.h>
 
 #undef HL_PRIM
+#ifdef _WIN32
 #define HL_PRIM extern "C" __declspec(dllexport)
+#else
+#define HL_PRIM extern "C" __attribute__((visibility("default")))
+#endif
+
+#undef DEFINE_PRIM_WITH_NAME
+#ifdef STATIC_HDLL
+#define DEFINE_PRIM_WITH_NAME(t,name,args,realName)
+#else
+#define DEFINE_PRIM_WITH_NAME(t,name,args,realName) \
+    HL_EXTERN_C HL_EXPORT void *hlp_##realName( const char **sign ) { *sign = _FUN(t,args); return (void*)(&HL_NAME(realName)); }
+#endif
 
 #include "glad/glad.h"
 
@@ -198,7 +210,7 @@ HL_PRIM void HL_NAME(gl_read_pixels)(int arg0, int arg1, int arg2, int arg3, uns
 DEFINE_PRIM(_VOID, gl_read_pixels, _I32 _I32 _I32 _I32 _I32 _I32 _BYTES);
 
 HL_PRIM void HL_NAME(gl_get_booleanv)(unsigned int arg0, vbyte* arg1) {
-	glad_glGetBooleanv(arg0, (const char*)arg1);
+	glad_glGetBooleanv(arg0, (unsigned char*)arg1);
 }
 DEFINE_PRIM(_VOID, gl_get_booleanv, _I32 _BYTES);
 
@@ -326,7 +338,7 @@ HL_PRIM void HL_NAME(gl_begin)(unsigned int arg0) {
 DEFINE_PRIM(_VOID, gl_begin, _I32);
 
 HL_PRIM void HL_NAME(gl_bitmap)(int arg0, int arg1, float arg2, float arg3, float arg4, float arg5, vbyte* arg6) {
-	glad_glBitmap(arg0, arg1, arg2, arg3, arg4, arg5, (const char*)arg6);
+	glad_glBitmap(arg0, arg1, arg2, arg3, arg4, arg5, (const unsigned char*)arg6);
 }
 DEFINE_PRIM(_VOID, gl_bitmap, _I32 _I32 _F32 _F32 _F32 _F32 _BYTES);
 
@@ -336,7 +348,7 @@ HL_PRIM void HL_NAME(gl_color3b)(signed char arg0, signed char arg1, signed char
 DEFINE_PRIM(_VOID, gl_color3b, _I32 _I32 _I32);
 
 HL_PRIM void HL_NAME(gl_color3bv)(vbyte* arg0) {
-	glad_glColor3bv((const char*)arg0);
+	glad_glColor3bv((const signed char*)arg0);
 }
 DEFINE_PRIM(_VOID, gl_color3bv, _BYTES);
 
@@ -394,7 +406,7 @@ HL_PRIM void HL_NAME(gl_color3ub)(unsigned char arg0, unsigned char arg1, unsign
 DEFINE_PRIM(_VOID, gl_color3ub, _I32 _I32 _I32);
 
 HL_PRIM void HL_NAME(gl_color3ubv)(vbyte* arg0) {
-	glad_glColor3ubv((const char*)arg0);
+	glad_glColor3ubv((const unsigned char*)arg0);
 }
 DEFINE_PRIM(_VOID, gl_color3ubv, _BYTES);
 
@@ -428,7 +440,7 @@ HL_PRIM void HL_NAME(gl_color4b)(signed char arg0, signed char arg1, signed char
 DEFINE_PRIM(_VOID, gl_color4b, _I32 _I32 _I32 _I32);
 
 HL_PRIM void HL_NAME(gl_color4bv)(vbyte* arg0) {
-	glad_glColor4bv((const char*)arg0);
+	glad_glColor4bv((const signed char*)arg0);
 }
 DEFINE_PRIM(_VOID, gl_color4bv, _BYTES);
 
@@ -486,7 +498,7 @@ HL_PRIM void HL_NAME(gl_color4ub)(unsigned char arg0, unsigned char arg1, unsign
 DEFINE_PRIM(_VOID, gl_color4ub, _I32 _I32 _I32 _I32);
 
 HL_PRIM void HL_NAME(gl_color4ubv)(vbyte* arg0) {
-	glad_glColor4ubv((const char*)arg0);
+	glad_glColor4ubv((const unsigned char*)arg0);
 }
 DEFINE_PRIM(_VOID, gl_color4ubv, _BYTES);
 
@@ -520,7 +532,7 @@ HL_PRIM void HL_NAME(gl_edge_flag)(unsigned char arg0) {
 DEFINE_PRIM(_VOID, gl_edge_flag, _I32);
 
 HL_PRIM void HL_NAME(gl_edge_flagv)(vbyte* arg0) {
-	glad_glEdgeFlagv((const char*)arg0);
+	glad_glEdgeFlagv((const unsigned char*)arg0);
 }
 DEFINE_PRIM(_VOID, gl_edge_flagv, _BYTES);
 
@@ -583,7 +595,7 @@ HL_PRIM void HL_NAME(gl_normal3b)(signed char arg0, signed char arg1, signed cha
 DEFINE_PRIM(_VOID, gl_normal3b, _I32 _I32 _I32);
 
 HL_PRIM void HL_NAME(gl_normal3bv)(vbyte* arg0) {
-	glad_glNormal3bv((const char*)arg0);
+	glad_glNormal3bv((const signed char*)arg0);
 }
 DEFINE_PRIM(_VOID, gl_normal3bv, _BYTES);
 
@@ -1281,7 +1293,7 @@ HL_PRIM void HL_NAME(gl_materialiv)(unsigned int arg0, unsigned int arg1, vbyte*
 DEFINE_PRIM(_VOID, gl_materialiv, _I32 _I32 _BYTES);
 
 HL_PRIM void HL_NAME(gl_polygon_stipple)(vbyte* arg0) {
-	glad_glPolygonStipple((const char*)arg0);
+	glad_glPolygonStipple((const unsigned char*)arg0);
 }
 DEFINE_PRIM(_VOID, gl_polygon_stipple, _BYTES);
 
@@ -1671,7 +1683,7 @@ HL_PRIM void HL_NAME(gl_get_pixel_mapusv)(unsigned int arg0, vbyte* arg1) {
 DEFINE_PRIM(_VOID, gl_get_pixel_mapusv, _I32 _BYTES);
 
 HL_PRIM void HL_NAME(gl_get_polygon_stipple)(vbyte* arg0) {
-	glad_glGetPolygonStipple((const char*)arg0);
+	glad_glGetPolygonStipple((unsigned char*)arg0);
 }
 DEFINE_PRIM(_VOID, gl_get_polygon_stipple, _BYTES);
 
@@ -1952,7 +1964,7 @@ DEFINE_PRIM(_VOID, gl_vertex_pointer, _I32 _I32 _I32 _BYTES);
 // REVIEW (glad_glAreTexturesResident):
 //   - parameter 'arg1': pointer to primitive type: out-param o array
 HL_PRIM unsigned char HL_NAME(gl_are_textures_resident)(int arg0, vbyte* arg1, vbyte* arg2) {
-	return glad_glAreTexturesResident(arg0, (unsigned int*)arg1, (const char*)arg2);
+	return glad_glAreTexturesResident(arg0, (unsigned int*)arg1, (unsigned char*)arg2);
 }
 DEFINE_PRIM(_I32, gl_are_textures_resident, _I32 _BYTES _BYTES);
 
@@ -1970,7 +1982,7 @@ HL_PRIM void HL_NAME(gl_indexub)(unsigned char arg0) {
 DEFINE_PRIM(_VOID, gl_indexub, _I32);
 
 HL_PRIM void HL_NAME(gl_indexubv)(vbyte* arg0) {
-	glad_glIndexubv((const char*)arg0);
+	glad_glIndexubv((const unsigned char*)arg0);
 }
 DEFINE_PRIM(_VOID, gl_indexubv, _BYTES);
 
@@ -2376,7 +2388,7 @@ HL_PRIM void HL_NAME(gl_secondary_color3b)(signed char arg0, signed char arg1, s
 DEFINE_PRIM(_VOID, gl_secondary_color3b, _I32 _I32 _I32);
 
 HL_PRIM void HL_NAME(gl_secondary_color3bv)(vbyte* arg0) {
-	glad_glSecondaryColor3bv((const char*)arg0);
+	glad_glSecondaryColor3bv((const signed char*)arg0);
 }
 DEFINE_PRIM(_VOID, gl_secondary_color3bv, _BYTES);
 
@@ -2434,7 +2446,7 @@ HL_PRIM void HL_NAME(gl_secondary_color3ub)(unsigned char arg0, unsigned char ar
 DEFINE_PRIM(_VOID, gl_secondary_color3ub, _I32 _I32 _I32);
 
 HL_PRIM void HL_NAME(gl_secondary_color3ubv)(vbyte* arg0) {
-	glad_glSecondaryColor3ubv((const char*)arg0);
+	glad_glSecondaryColor3ubv((const unsigned char*)arg0);
 }
 DEFINE_PRIM(_VOID, gl_secondary_color3ubv, _BYTES);
 
@@ -2778,7 +2790,7 @@ DEFINE_PRIM(_VOID, gl_enable_vertex_attrib_array, _I32);
 //   - parameter 'arg4': pointer to primitive type: out-param o array
 //   - parameter 'arg5': pointer to primitive type: out-param o array
 HL_PRIM void HL_NAME(gl_get_active_attrib)(unsigned int arg0, unsigned int arg1, int arg2, vbyte* arg3, vbyte* arg4, vbyte* arg5, vbyte* arg6) {
-	glad_glGetActiveAttrib(arg0, arg1, arg2, (int*)arg3, (int*)arg4, (unsigned int*)arg5, (const char*)arg6);
+	glad_glGetActiveAttrib(arg0, arg1, arg2, (int*)arg3, (int*)arg4, (unsigned int*)arg5, (char*)arg6);
 }
 DEFINE_PRIM(_VOID, gl_get_active_attrib, _I32 _I32 _I32 _BYTES _BYTES _BYTES _BYTES);
 
@@ -2787,7 +2799,7 @@ DEFINE_PRIM(_VOID, gl_get_active_attrib, _I32 _I32 _I32 _BYTES _BYTES _BYTES _BY
 //   - parameter 'arg4': pointer to primitive type: out-param o array
 //   - parameter 'arg5': pointer to primitive type: out-param o array
 HL_PRIM void HL_NAME(gl_get_active_uniform)(unsigned int arg0, unsigned int arg1, int arg2, vbyte* arg3, vbyte* arg4, vbyte* arg5, vbyte* arg6) {
-	glad_glGetActiveUniform(arg0, arg1, arg2, (int*)arg3, (int*)arg4, (unsigned int*)arg5, (const char*)arg6);
+	glad_glGetActiveUniform(arg0, arg1, arg2, (int*)arg3, (int*)arg4, (unsigned int*)arg5, (char*)arg6);
 }
 DEFINE_PRIM(_VOID, gl_get_active_uniform, _I32 _I32 _I32 _BYTES _BYTES _BYTES _BYTES);
 
@@ -2814,7 +2826,7 @@ DEFINE_PRIM(_VOID, gl_get_programiv, _I32 _I32 _BYTES);
 // REVIEW (glad_glGetProgramInfoLog):
 //   - parameter 'arg2': pointer to primitive type: out-param o array
 HL_PRIM void HL_NAME(gl_get_program_info_log)(unsigned int arg0, int arg1, vbyte* arg2, vbyte* arg3) {
-	glad_glGetProgramInfoLog(arg0, arg1, (int*)arg2, (const char*)arg3);
+	glad_glGetProgramInfoLog(arg0, arg1, (int*)arg2, (char*)arg3);
 }
 DEFINE_PRIM(_VOID, gl_get_program_info_log, _I32 _I32 _BYTES _BYTES);
 
@@ -2828,14 +2840,14 @@ DEFINE_PRIM(_VOID, gl_get_shaderiv, _I32 _I32 _BYTES);
 // REVIEW (glad_glGetShaderInfoLog):
 //   - parameter 'arg2': pointer to primitive type: out-param o array
 HL_PRIM void HL_NAME(gl_get_shader_info_log)(unsigned int arg0, int arg1, vbyte* arg2, vbyte* arg3) {
-	glad_glGetShaderInfoLog(arg0, arg1, (int*)arg2, (const char*)arg3);
+	glad_glGetShaderInfoLog(arg0, arg1, (int*)arg2, (char*)arg3);
 }
 DEFINE_PRIM(_VOID, gl_get_shader_info_log, _I32 _I32 _BYTES _BYTES);
 
 // REVIEW (glad_glGetShaderSource):
 //   - parameter 'arg2': pointer to primitive type: out-param o array
 HL_PRIM void HL_NAME(gl_get_shader_source)(unsigned int arg0, int arg1, vbyte* arg2, vbyte* arg3) {
-	glad_glGetShaderSource(arg0, arg1, (int*)arg2, (const char*)arg3);
+	glad_glGetShaderSource(arg0, arg1, (int*)arg2, (char*)arg3);
 }
 DEFINE_PRIM(_VOID, gl_get_shader_source, _I32 _I32 _BYTES _BYTES);
 
@@ -3152,7 +3164,7 @@ HL_PRIM void HL_NAME(gl_vertex_attrib3sv)(unsigned int arg0, vbyte* arg1) {
 DEFINE_PRIM(_VOID, gl_vertex_attrib3sv, _I32 _BYTES);
 
 HL_PRIM void HL_NAME(gl_vertex_attrib4_nbv)(unsigned int arg0, vbyte* arg1) {
-	glad_glVertexAttrib4Nbv(arg0, (const char*)arg1);
+	glad_glVertexAttrib4Nbv(arg0, (const signed char*)arg1);
 }
 DEFINE_PRIM(_VOID, gl_vertex_attrib4_nbv, _I32 _BYTES);
 
@@ -3176,7 +3188,7 @@ HL_PRIM void HL_NAME(gl_vertex_attrib4_nub)(unsigned int arg0, unsigned char arg
 DEFINE_PRIM(_VOID, gl_vertex_attrib4_nub, _I32 _I32 _I32 _I32 _I32);
 
 HL_PRIM void HL_NAME(gl_vertex_attrib4_nubv)(unsigned int arg0, vbyte* arg1) {
-	glad_glVertexAttrib4Nubv(arg0, (const char*)arg1);
+	glad_glVertexAttrib4Nubv(arg0, (const unsigned char*)arg1);
 }
 DEFINE_PRIM(_VOID, gl_vertex_attrib4_nubv, _I32 _BYTES);
 
@@ -3195,7 +3207,7 @@ HL_PRIM void HL_NAME(gl_vertex_attrib4_nusv)(unsigned int arg0, vbyte* arg1) {
 DEFINE_PRIM(_VOID, gl_vertex_attrib4_nusv, _I32 _BYTES);
 
 HL_PRIM void HL_NAME(gl_vertex_attrib4bv)(unsigned int arg0, vbyte* arg1) {
-	glad_glVertexAttrib4bv(arg0, (const char*)arg1);
+	glad_glVertexAttrib4bv(arg0, (const signed char*)arg1);
 }
 DEFINE_PRIM(_VOID, gl_vertex_attrib4bv, _I32 _BYTES);
 
@@ -3243,7 +3255,7 @@ HL_PRIM void HL_NAME(gl_vertex_attrib4sv)(unsigned int arg0, vbyte* arg1) {
 DEFINE_PRIM(_VOID, gl_vertex_attrib4sv, _I32 _BYTES);
 
 HL_PRIM void HL_NAME(gl_vertex_attrib4ubv)(unsigned int arg0, vbyte* arg1) {
-	glad_glVertexAttrib4ubv(arg0, (const char*)arg1);
+	glad_glVertexAttrib4ubv(arg0, (const unsigned char*)arg1);
 }
 DEFINE_PRIM(_VOID, gl_vertex_attrib4ubv, _I32 _BYTES);
 
@@ -3316,7 +3328,7 @@ HL_PRIM void HL_NAME(gl_color_maski)(unsigned int arg0, unsigned char arg1, unsi
 DEFINE_PRIM(_VOID, gl_color_maski, _I32 _I32 _I32 _I32 _I32);
 
 HL_PRIM void HL_NAME(gl_get_booleani_v)(unsigned int arg0, unsigned int arg1, vbyte* arg2) {
-	glad_glGetBooleani_v(arg0, arg1, (const char*)arg2);
+	glad_glGetBooleani_v(arg0, arg1, (unsigned char*)arg2);
 }
 DEFINE_PRIM(_VOID, gl_get_booleani_v, _I32 _I32 _BYTES);
 
@@ -3374,7 +3386,7 @@ DEFINE_PRIM(_VOID, gl_transform_feedback_varyings, _I32 _I32 _BYTES _I32);
 //   - parameter 'arg4': pointer to primitive type: out-param o array
 //   - parameter 'arg5': pointer to primitive type: out-param o array
 HL_PRIM void HL_NAME(gl_get_transform_feedback_varying)(unsigned int arg0, unsigned int arg1, int arg2, vbyte* arg3, vbyte* arg4, vbyte* arg5, vbyte* arg6) {
-	glad_glGetTransformFeedbackVarying(arg0, arg1, arg2, (int*)arg3, (int*)arg4, (unsigned int*)arg5, (const char*)arg6);
+	glad_glGetTransformFeedbackVarying(arg0, arg1, arg2, (int*)arg3, (int*)arg4, (unsigned int*)arg5, (char*)arg6);
 }
 DEFINE_PRIM(_VOID, gl_get_transform_feedback_varying, _I32 _I32 _I32 _BYTES _BYTES _BYTES _BYTES);
 
@@ -3511,7 +3523,7 @@ HL_PRIM void HL_NAME(gl_vertex_attrib_i4uiv)(unsigned int arg0, vbyte* arg1) {
 DEFINE_PRIM(_VOID, gl_vertex_attrib_i4uiv, _I32 _BYTES);
 
 HL_PRIM void HL_NAME(gl_vertex_attrib_i4bv)(unsigned int arg0, vbyte* arg1) {
-	glad_glVertexAttribI4bv(arg0, (const char*)arg1);
+	glad_glVertexAttribI4bv(arg0, (const signed char*)arg1);
 }
 DEFINE_PRIM(_VOID, gl_vertex_attrib_i4bv, _I32 _BYTES);
 
@@ -3523,7 +3535,7 @@ HL_PRIM void HL_NAME(gl_vertex_attrib_i4sv)(unsigned int arg0, vbyte* arg1) {
 DEFINE_PRIM(_VOID, gl_vertex_attrib_i4sv, _I32 _BYTES);
 
 HL_PRIM void HL_NAME(gl_vertex_attrib_i4ubv)(unsigned int arg0, vbyte* arg1) {
-	glad_glVertexAttribI4ubv(arg0, (const char*)arg1);
+	glad_glVertexAttribI4ubv(arg0, (const unsigned char*)arg1);
 }
 DEFINE_PRIM(_VOID, gl_vertex_attrib_i4ubv, _I32 _BYTES);
 
@@ -3852,7 +3864,7 @@ DEFINE_PRIM(_VOID, gl_get_active_uniformsiv, _I32 _I32 _BYTES _I32 _BYTES);
 // REVIEW (glad_glGetActiveUniformName):
 //   - parameter 'arg3': pointer to primitive type: out-param o array
 HL_PRIM void HL_NAME(gl_get_active_uniform_name)(unsigned int arg0, unsigned int arg1, int arg2, vbyte* arg3, vbyte* arg4) {
-	glad_glGetActiveUniformName(arg0, arg1, arg2, (int*)arg3, (const char*)arg4);
+	glad_glGetActiveUniformName(arg0, arg1, arg2, (int*)arg3, (char*)arg4);
 }
 DEFINE_PRIM(_VOID, gl_get_active_uniform_name, _I32 _I32 _I32 _BYTES _BYTES);
 
@@ -3871,7 +3883,7 @@ DEFINE_PRIM(_VOID, gl_get_active_uniform_blockiv, _I32 _I32 _I32 _BYTES);
 // REVIEW (glad_glGetActiveUniformBlockName):
 //   - parameter 'arg3': pointer to primitive type: out-param o array
 HL_PRIM void HL_NAME(gl_get_active_uniform_block_name)(unsigned int arg0, unsigned int arg1, int arg2, vbyte* arg3, vbyte* arg4) {
-	glad_glGetActiveUniformBlockName(arg0, arg1, arg2, (int*)arg3, (const char*)arg4);
+	glad_glGetActiveUniformBlockName(arg0, arg1, arg2, (int*)arg3, (char*)arg4);
 }
 DEFINE_PRIM(_VOID, gl_get_active_uniform_block_name, _I32 _I32 _I32 _BYTES _BYTES);
 
@@ -3943,7 +3955,7 @@ DEFINE_PRIM(_VOID, gl_wait_sync, _ABSTRACT(__GLsync) _I32 _I64);
 // REVIEW (glad_glGetInteger64v):
 //   - parameter 'arg1': pointer to primitive type: out-param o array
 HL_PRIM void HL_NAME(gl_get_integer64v)(unsigned int arg0, vbyte* arg1) {
-	glad_glGetInteger64v(arg0, (long long*)arg1);
+	glad_glGetInteger64v(arg0, (GLint64*)arg1);
 }
 DEFINE_PRIM(_VOID, gl_get_integer64v, _I32 _BYTES);
 
@@ -3958,14 +3970,14 @@ DEFINE_PRIM(_VOID, gl_get_synciv, _ABSTRACT(__GLsync) _I32 _I32 _BYTES _BYTES);
 // REVIEW (glad_glGetInteger64i_v):
 //   - parameter 'arg2': pointer to primitive type: out-param o array
 HL_PRIM void HL_NAME(gl_get_integer64i_v)(unsigned int arg0, unsigned int arg1, vbyte* arg2) {
-	glad_glGetInteger64i_v(arg0, arg1, (long long*)arg2);
+	glad_glGetInteger64i_v(arg0, arg1, (GLint64*)arg2);
 }
 DEFINE_PRIM(_VOID, gl_get_integer64i_v, _I32 _I32 _BYTES);
 
 // REVIEW (glad_glGetBufferParameteri64v):
 //   - parameter 'arg2': pointer to primitive type: out-param o array
 HL_PRIM void HL_NAME(gl_get_buffer_parameteri64v)(unsigned int arg0, unsigned int arg1, vbyte* arg2) {
-	glad_glGetBufferParameteri64v(arg0, arg1, (long long*)arg2);
+	glad_glGetBufferParameteri64v(arg0, arg1, (GLint64*)arg2);
 }
 DEFINE_PRIM(_VOID, gl_get_buffer_parameteri64v, _I32 _I32 _BYTES);
 
@@ -4104,14 +4116,14 @@ DEFINE_PRIM(_VOID, gl_query_counter, _I32 _I32);
 // REVIEW (glad_glGetQueryObjecti64v):
 //   - parameter 'arg2': pointer to primitive type: out-param o array
 HL_PRIM void HL_NAME(gl_get_query_objecti64v)(unsigned int arg0, unsigned int arg1, vbyte* arg2) {
-	glad_glGetQueryObjecti64v(arg0, arg1, (long long*)arg2);
+	glad_glGetQueryObjecti64v(arg0, arg1, (GLint64*)arg2);
 }
 DEFINE_PRIM(_VOID, gl_get_query_objecti64v, _I32 _I32 _BYTES);
 
 // REVIEW (glad_glGetQueryObjectui64v):
 //   - parameter 'arg2': pointer to primitive type: out-param o array
 HL_PRIM void HL_NAME(gl_get_query_objectui64v)(unsigned int arg0, unsigned int arg1, vbyte* arg2) {
-	glad_glGetQueryObjectui64v(arg0, arg1, (unsigned long long*)arg2);
+	glad_glGetQueryObjectui64v(arg0, arg1, (GLuint64*)arg2);
 }
 DEFINE_PRIM(_VOID, gl_get_query_objectui64v, _I32 _I32 _BYTES);
 
