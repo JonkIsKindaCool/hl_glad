@@ -1,17 +1,17 @@
 {
     "name": "hl_glad",
-    "url": "https://github.com/jasononeil/useless/",
+    "url": "https://github.com/JonkIsKindaCool/hl_glad/",
     "license": "MIT",
     "tags": [
         "cross",
         "useless"
     ],
-    "description": "This library is useless in the same way on every platform.",
+    "description": "Glad bindings for hashlink.",
     "version": "1.0.0",
     "classPath": "src/",
     "releasenote": "Initial release, everything is working correctly.",
     "contributors": [
-        "Juraj"
+        "JonkIsKindaCool"
     ],
     "dependencies": {}
 }
