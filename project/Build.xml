@@ -1,0 +1,48 @@
+<xml>
+    <set name="HXCPP_API_LEVEL" value="400" />
+
+    <set name="GLAD_SRC" value="libs/glad/src" />
+    <set name="GLAD_INCLUDE" value="libs/glad/include" />
+
+    <set name="HL_ROOT" value="libs/hashlink" />
+    <set name="HL_INCLUDE" value="${HL_ROOT}/src" />
+
+    <files id="haxe">
+        <file name="${GLAD_SRC}/glad.c" />
+
+        <compilerflag value="-I${HL_INCLUDE}" />
+        <compilerflag value="-I${GLAD_INCLUDE}" />
+        <compilerflag value="-DLIBHL_STATIC" />
+    </files>
+
+    <target id="default" tool="linker" toolid="dll" output="glad">
+        <ext value=".hdll" />
+
+        <files id="haxe" />
+
+        <lib name="libs/hl.lib" />
+
+        <section if="windows">
+            <lib name="opengl32.lib" />
+            <lib name="gdi32.lib" />
+            <lib name="user32.lib" />
+            <lib name="shell32.lib" />
+            <lib name="winmm.lib" />
+        </section>
+
+        <section if="linux">
+            <lib name="-lGL" />
+            <lib name="-lX11" />
+            <lib name="-lpthread" />
+            <lib name="-ldl" />
+            <lib name="-lm" />
+        </section>
+
+        <section if="mac">
+            <lib name="-framework Cocoa" />
+            <lib name="-framework OpenGL" />
+            <lib name="-framework IOKit" />
+            <lib name="-framework CoreVideo" />
+        </section>
+    </target>
+</xml>
